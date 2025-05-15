@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Mass Index - حاسبة مؤشر كتلة الجسم</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --card-bg: #fff;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .bmi-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .results-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .bmi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .bmi-category {
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .bmi-explanation {
+            margin-top: 20px;
+        }
+
+        .bmi-explanation h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .interpretation-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f3f3f3;
+            border-radius: var(--border-radius);
+            display: flex;
+        }
+
+        .interpretation-item .icon {
+            margin-left: 15px;
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .interpretation-item h4 {
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .underweight { background-color: #AED6F1; }
+        .normal { background-color: #A9DFBF; }
+        .overweight { background-color: #F9E79F; }
+        .obese { background-color: #F5B7B1; }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .bmi-card, .results-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Body Mass Index Calculator</h1>
+            <p>حاسبة مؤشر كتلة الجسم</p>
+        </div>
+        
+        <div class="bmi-card">
+            <div class="input-group">
+                <label for="weight">الوزن (كغم)</label>
+                <input type="number" id="weight" placeholder="أدخل وزنك بالكيلوغرام" min="1" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="height">الطول (سم)</label>
+                <input type="number" id="height" placeholder="أدخل طولك بالسنتيمتر" min="1" step="0.1">
+            </div>
+            
+            <button id="calculate-btn" class="btn">احسب مؤشر كتلة الجسم</button>
+        </div>
+        
+        <div class="results-card" id="results">
+            <h2 class="results-header">نتائج حساب مؤشر كتلة الجسم</h2>
+            
+            <div class="bmi-value" id="bmi-value">25.0</div>
+            
+            <div class="bmi-category" id="bmi-category">وزن طبيعي</div>
+            
+            <div class="bmi-explanation">
+                <h3>شرح النتيجة:</h3>
+                <div id="interpretation-list">
+                    <!-- سيتم ملء هذا بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const weightInput = document.getElementById('weight');
+            const heightInput = document.getElementById('height');
+            const resultsCard = document.getElementById('results');
+            const bmiValueElement = document.getElementById('bmi-value');
+            const bmiCategoryElement = document.getElementById('bmi-category');
+            const interpretationList = document.getElementById('interpretation-list');
+
+            calculateBtn.addEventListener('click', calculateBMI);
+
+            async function calculateBMI() {
+                // التحقق من المدخلات
+                const weight = parseFloat(weightInput.value);
+                const height = parseFloat(heightInput.value);
+
+                if (!weight || weight <= 0 || !height || height <= 0) {
+                    alert('الرجاء إدخال قيم صحيحة للوزن والطول');
+                    return;
+                }
+
+                // حساب مؤشر كتلة الجسم (الطول بالمتر)
+                const heightInMeters = height / 100;
+                const bmi = weight / (heightInMeters * heightInMeters);
+                
+                // تحديد الفئة
+                let category = '';
+                let categoryClass = '';
+                let interpretations = [];
+
+                if (bmi < 18.5) {
+                    category = 'نقص في الوزن';
+                    categoryClass = 'underweight';
+                    interpretations = [
+                        {
+                            title: '📊 مؤشر كتلة الجسم أقل من 18.5',
+                            text: 'أنت تعاني من نقص في الوزن، وقد تحتاج إلى زيادة تناول السعرات الحرارية.'
+                        },
+                        {
+                            title: '🍎 التغذية',
+                            text: 'يُنصح بزيادة استهلاك الأطعمة الغنية بالبروتين والكربوهيدرات المعقدة والدهون الصحية.'
+                        },
+                        {
+                            title: '💪 النشاط البدني',
+                            text: 'يفضل ممارسة تمارين بناء العضلات بشكل منتظم للمساعدة في زيادة الوزن بشكل صحي.'
+                        },
+                        {
+                            title: '👨‍⚕️ المتابعة الطبية',
+                            text: 'ينصح بمراجعة الطبيب للتأكد من عدم وجود مشاكل صحية مسببة لنقص الوزن.'
+                        }
+                    ];
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    category = 'وزن طبيعي';
+                    categoryClass = 'normal';
+                    interpretations = [
+                        {
+                            title: '📊 مؤشر كتلة الجسم بين 18.5 و 24.9',
+                            text: 'وزنك يقع ضمن النطاق الطبيعي، استمر في عاداتك الصحية!'
+                        },
+                        {
+                            title: '🍎 التغذية',
+                            text: 'حافظ على نظام غذائي متوازن يشمل الفواكه والخضروات والبروتينات والحبوب الكاملة.'
+                        },
+                        {
+                            title: '💪 النشاط البدني',
+                            text: 'يُنصح بممارسة 150 دقيقة على الأقل من النشاط البدني المعتدل أسبوعياً.'
+                        },
+                        {
+                            title: '🔄 المحافظة',
+                            text: 'حافظ على عاداتك الصحية في الأكل والنشاط البدني للبقاء في هذا النطاق المثالي.'
+                        }
+                    ];
+                } else if (bmi >= 25 && bmi < 30) {
+                    category = 'زيادة في الوزن';
+                    categoryClass = 'overweight';
+                    interpretations = [
+                        {
+                            title: '📊 مؤشر كتلة الجسم بين 25 و 29.9',
+                            text: 'لديك زيادة في الوزن، ويُنصح باتخاذ خطوات لتقليل وزنك تدريجياً.'
+                        },
+                        {
+                            title: '🍎 التغذية',
+                            text: 'حاول تقليل السعرات الحرارية مع التركيز على الأطعمة الغنية بالعناصر الغذائية وتجنب الوجبات السريعة والسكريات.'
+                        },
+                        {
+                            title: '💪 النشاط البدني',
+                            text: 'زيادة النشاط البدني إلى 30 دقيقة يومياً على الأقل، مع التركيز على تمارين القلب والأوعية الدموية.'
+                        },
+                        {
+                            title: '⚠️ المخاطر الصحية',
+                            text: 'زيادة الوزن قد تزيد من خطر الإصابة بأمراض القلب والسكري وارتفاع ضغط الدم.'
+                        }
+                    ];
+                } else {
+                    category = 'سمنة';
+                    categoryClass = 'obese';
+                    interpretations = [
+                        {
+                            title: '📊 مؤشر كتلة الجسم 30 أو أكثر',
+                            text: 'أنت تعاني من السمنة، ويُنصح باستشارة طبية للحصول على خطة متكاملة لإنقاص الوزن.'
+                        },
+                        {
+                            title: '🍎 التغذية',
+                            text: 'اتباع نظام غذائي منخفض السعرات الحرارية تحت إشراف أخصائي تغذية، مع التركيز على الأطعمة الطبيعية غير المصنعة.'
+                        },
+                        {
+                            title: '💪 النشاط البدني',
+                            text: 'بدء برنامج تدريبي تدريجي يشمل تمارين القلب وتمارين القوة، مع زيادة الكثافة تدريجياً.'
+                        },
+                        {
+                            title: '⚠️ المخاطر الصحية',
+                            text: 'السمنة ترتبط بزيادة كبيرة في خطر الإصابة بالأمراض المزمنة مثل أمراض القلب والسكري من النوع الثاني والسكتة الدماغية وبعض أنواع السرطان.'
+                        },
+                        {
+                            title: '👨‍⚕️ المتابعة الطبية',
+                            text: 'ينصح بإجراء فحوصات دورية لمستويات السكر وضغط الدم والكوليسترول، والمتابعة مع الطبيب.'
+                        }
+                    ];
+                }
+
+                // محاكاة طلب API للحصول على بيانات إضافية
+                try {
+                    // في الواقع، يمكنك استخدام Fetch API للاتصال بخدمة خارجية
+                    // هذه مجرد محاكاة لعملية الطلب
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // تعيين النتائج
+                    bmiValueElement.textContent = bmi.toFixed(1);
+                    bmiCategoryElement.textContent = category;
+                    bmiCategoryElement.className = `bmi-category ${categoryClass}`;
+                    
+                    // إنشاء قائمة التفسيرات
+                    interpretationList.innerHTML = '';
+                    interpretations.forEach(item => {
+                        const interpretationItem = document.createElement('div');
+                        interpretationItem.className = 'interpretation-item';
+                        
+                        interpretationItem.innerHTML = `
+                            <div class="icon">●</div>
+                            <div class="content">
+                                <h4>${item.title}</h4>
+                                <p>${item.text}</p>
+                            </div>
+                        `;
+                        
+                        interpretationList.appendChild(interpretationItem);
+                    });
+                    
+                    // إظهار نتائج الحساب
+                    resultsCard.style.display = 'block';
+                    
+                    // التمرير إلى منطقة النتائج
+                    resultsCard.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    console.error('حدث خطأ أثناء حساب مؤشر كتلة الجسم:', error);
+                    alert('حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى لاحقاً.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
